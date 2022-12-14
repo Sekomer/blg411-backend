@@ -82,6 +82,25 @@ class UserRepository {
       { $pull: { items: { name: { $in: foodNames } } } }
     );
   }
+
+  async getFoodsOfUser(username: string) {
+    if (!this.db) {
+      return null;
+    }
+
+    const user = await this.findByUserName(username);
+
+    if (!user) {
+      console.log("User not found");
+      return null;
+    }
+
+    const result = user.items.length > 0
+    ? user.items
+    : [];
+
+    return result
+  }
 }
 
 export default new UserRepository(undefined);

@@ -6,6 +6,7 @@ import FoodRepository from "../repositories/food";
 import UserRepository from "../repositories/user";
 
 import Food from "../models/food";
+import food from "../repositories/food";
 
 const foodRouter: Router = express.Router();
 
@@ -166,6 +167,22 @@ foodRouter.post("/rem4user/:username", async (req: Request, res: Response) => {
     })
     .catch((err) => {
       console.log(err);
+      res.status(404).send(err);
+    });
+});
+
+foodRouter.get("/users_food/:username", async (req: Request, res: Response) => {
+  if (!FoodRepository || !UserRepository) {
+    return res.status(400).send("collection not found");
+  }
+
+  const username = req.params.username;
+
+  UserRepository.getFoodsOfUser(username)
+    .then((result) => {
+      res.status(200).send(result);
+    })
+    .catch((err) => {
       res.status(404).send(err);
     });
 });
