@@ -6,6 +6,11 @@ export default class User {
     public username: string,
     public password: string,
     public token: string,
-    public items: Array<object>
+    public items: Array<object>,
+
+    public height: number,
+    public weight: number,
+    public age: number,
+    public sex: string
   ) {}
 }

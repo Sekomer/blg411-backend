@@ -1,6 +1,4 @@
-import { log } from "console";
 import { Collection, ObjectId } from "mongodb";
-import Food from "../models/food";
 import User from "../models/user";
 import { collections } from "../services/database.service";
 
@@ -95,11 +93,34 @@ class UserRepository {
       return null;
     }
 
-    const result = user.items.length > 0
-    ? user.items
-    : [];
+    const result = user.items.length > 0 ? user.items : [];
 
-    return result
+    return result;
+  }
+
+  async getAllUsers() {
+    if (!this.db) {
+      return null;
+    }
+
+    const users = await this.db.find({}).toArray();
+
+    if (!users) {
+      console.log("Users not found");
+      return null;
+    }
+
+    // return height weight username age sex of all users
+      return users.map((user) => {
+      return {
+        username: user.username,
+        age: user.age,
+        height: user.height,
+        weight: user.weight,
+        sex: user.sex,
+      };
+    });
+
   }
 }
 

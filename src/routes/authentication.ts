@@ -78,7 +78,7 @@ authRouter.post("/register", async (req: Request, res: Response) => {
     return res.status(400).send("collection error");
   }
 
-  const { username, password } = req.body;
+  const { username, password, height, weight, age, sex } = req.body;
 
   if (!(username && password)) {
     res.status(400).send("all input fields are required");
@@ -97,7 +97,17 @@ authRouter.post("/register", async (req: Request, res: Response) => {
     expiresIn: "1d",
   });
 
-  const newUser = new User(new ObjectId(), username, hashed, token, []);
+  const newUser = new User(
+    new ObjectId(),
+    username,
+    hashed,
+    token,
+    [],
+    height,
+    weight,
+    age,
+    sex
+  );
 
   UserRepository.insertOne(newUser)
     .then(() => res.status(201).json({ username: username, token: token }))
