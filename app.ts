@@ -2,7 +2,10 @@ import dotenv from "dotenv";
 import express, { Express } from "express";
 
 import { utilRouter } from "./src/routes/util.router";
-import { connectToDatabase, collections } from "./src/services/database.service";
+import {
+	connectToDatabase,
+	collections,
+} from "./src/services/database.service";
 
 const result = dotenv.config({ path: ".env" });
 const bodyParser = require("body-parser");
@@ -16,8 +19,8 @@ import UserRepository from "./src/repositories/user";
 
 // abort if .env file is not found
 if (result.error) {
-  console.error(".env file missing!");
-  throw result.error;
+	console.error(".env file missing!");
+	throw result.error;
 }
 
 // Initializing environment variables
@@ -27,37 +30,39 @@ const app: Express = express();
 
 // configure the app to use bodyParser()
 app.use(
-  bodyParser.urlencoded({
-    extended: true,
-  })
+	bodyParser.urlencoded({
+		extended: true,
+	})
 );
 
 app.use(bodyParser.json());
 
 // cors settings
 app.use(
-  cors({
-    origin: "*",
-  })
+	cors({
+		origin: "*",
+	})
 );
 
 /** database connection and middleware setup */
 connectToDatabase()
-  .then(() => {
-    UserRepository.db = collections.users;
-    FoodRepository.db = collections.foods;
+	.then(() => {
+		UserRepository.db = collections.users;
+		FoodRepository.db = collections.foods;
 
-    // adding middlewares
-    app.use("/", authRouter);
-    app.use(verifyToken);
-    app.use("/", utilRouter);
-    app.use("/foods", foodRouter);
+		// adding middlewares
+		app.use("/", authRouter);
+		app.use(verifyToken);
+		app.use("/", utilRouter);
+		app.use("/foods", foodRouter);
 
-    app.listen(PORT, () => {
-      console.log(`Server started at http://localhost:${PORT}`);
-    });
-  })
-  .catch((error: Error) => {
-    console.error("Database connection failed", error);
-    process.exit();
-  });
+		app.listen(PORT, () => {
+			console.log(`Server started at http://localhost:${PORT}`);
+		});
+	})
+	.catch((error: Error) => {
+		console.error("Database connection failed", error);
+		process.exit();
+	});
+
+export default app;
